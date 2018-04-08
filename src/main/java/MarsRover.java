@@ -1,62 +1,42 @@
-import javax.xml.soap.SOAPPart;
-
 public class MarsRover {
-
-    private String getDirections(int final_x, int final_y, int x_co, int y_co, char direction, String pattern) {
-        for(int i=0; i<pattern.length();i++){
-            if(pattern.charAt(i)=='L'){
-                if(direction=='N'){
-                    direction = 'W';
-                }
-                else if(direction == 'W'){
-                    direction = 'S';
-                }
-                else if(direction == 'S'){
-                    direction = 'E';
-                }
-                else if(direction == 'E'){
-                    direction = 'N';
-                }
-            }
-            if(pattern.charAt(i)=='R'){
-                if(direction=='N'){
-                    direction = 'E';
-                }
-                else if(direction == 'E'){
-                    direction = 'S';
-                }
-                else if(direction == 'S'){
-                    direction = 'W';
-                }
-                else if(direction == 'W'){
-                    direction = 'N';
-                }
-
-            }
-            if(pattern.charAt(i)=='M'){
-                if(direction == 'E') {
-                    x_co = x_co + 1;
-                }
-                if(direction =='W'){
-                    x_co = x_co - 1;
-                }
-                if(direction == 'N'){
-                    y_co = y_co +1;
-                }
-                if(direction == 'S')
-                {
-                    y_co = y_co-1;
-                }
-            }
-        }
-        System.out.println(x_co+" "+y_co+" "+direction);
-        return x_co+" "+y_co+" "+direction;
+    public String pattern;
+    private RoverPosition roverPosition = new RoverPosition(3, 3, 'E');
+    private RoverMovement roverMovement = new RoverMovement(roverPosition);
+    MarsRover(String pattern){
+        this.pattern = pattern;
     }
 
-    public static void main(String args[]) {
-        MarsRover marsRover = new MarsRover();
-        marsRover.getDirections(5,5,1, 2, 'N', "LMLMLMLMM");
-        marsRover.getDirections(5,5,3, 3, 'E', "MMRMMRMRRM");
+    private void moveRover() {
+        for (int i = 0; i < pattern.length(); i++) {
+            if (pattern.charAt(i) == 'L') {
+                if(roverPosition.direction == 'N')
+                roverPosition.direction = RoverMovement.MoveLeft.N.getDirection();
+                else if(roverPosition.direction == 'S')
+                    roverPosition.direction = RoverMovement.MoveLeft.S.getDirection();
+                else if(roverPosition.direction == 'E')
+                    roverPosition.direction = RoverMovement.MoveLeft.E.getDirection();
+                else
+                    roverPosition.direction = RoverMovement.MoveLeft.W.getDirection();
+            }
+            else if (pattern.charAt(i) == 'R') {
+                if(roverPosition.direction == 'N')
+                    roverPosition.direction = RoverMovement.MoveRight.N.getDirection();
+                else if(roverPosition.direction == 'S')
+                    roverPosition.direction = RoverMovement.MoveRight.S.getDirection();
+                else if(roverPosition.direction == 'E')
+                    roverPosition.direction = RoverMovement.MoveRight.E.getDirection();
+                else
+                    roverPosition.direction = RoverMovement.MoveRight.W.getDirection();
+            } else
+                roverMovement.moveStraight(roverPosition);
 
+
+        }
+        System.out.println(roverPosition.x + " " +roverPosition.y+ " " +roverPosition.direction);
+    }
+
+    public static void main (String[] args){
+        MarsRover marsRover = new MarsRover("MMRMMRMRRM");
+        marsRover.moveRover();
     }
 }
